@@ -1,3 +1,32 @@
+<?php
+  if (isset($_POST['submit'])) {
+    require 'connect.php';
+    $studentID = $_POST['student_ID'];
+    $password = $_POST['password'];
+    $sql = "SELECT * FROM student WHERE studentID='{$studentID}'";
+    echo $sql;
+    try{
+      $result = $conn->query($sql);
+      $row = $result->fetch_assoc();
+      if($row) {
+        if (password_verify ($password, $row['password'])) {
+          echo ('Correct !!');
+        }
+        else{
+          // Password ผิด
+          echo ('ว้ายยยย Password ผิดไปใส่ใหม่!!');
+        }
+      }
+        else{
+          // ID ผิด
+          echo ('ว้ายยยย ใส่ผิด นึกดีๆแล้วใส่ใหม่ !!');
+      }
+    }
+    catch(Exception $e) {
+      echo $e;
+    }
+  }
+  ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -37,20 +66,25 @@
   </head>
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <main class="form-signin w-100 m-auto">
-      <form>
+      <form method="post">
+
         <!-- <img class="mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
     
+        <!-- ID -->
         <div class="form-floating">
-          <input type="text" class="form-control" id="floatingEmail" placeholder="Email address">
+          <input name="student_ID" type="text"  class="form-control" id="floatingEmail" placeholder="Email address">
           <label for="floatingEmail">Student ID</label>
         </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+
+        <!-- Password -->
+        <div class="form-floating">            
+          <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
           <label for="floatingPassword">Password</label>
         </div>
-    
-        <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+
+        <!-- Button -->
+        <button name="submit" class="btn btn-primary w-100 py-2"  type="submit">Sign in</button>
         <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="#!" class="link-danger">Register</a></p>
         <!-- <p class="mt-5 mb-3 text-body-secondary">© 2017–2023</p> -->
       </form>
