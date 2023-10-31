@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(!isset($_SESSION['user'])
+if(!isset($_SESSION['user'])){
     header('location:signin.php');
     exit;
-)
+}
 ?>
 <!doctype html>
 <html lang="en">
