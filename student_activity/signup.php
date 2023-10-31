@@ -1,4 +1,5 @@
 <?php
+  session_start();
   require 'connect.php';
   if (isset($_POST['submit'])) {
     $StudentID = $_POST['StudentID'];
@@ -10,7 +11,21 @@
       student (studentID, studentName, majorID, password) 
       values('{$StudentID}','{$StudentName}',
              '{$Major}','{$password}')";
-    $conn->query($sql);
+    try {
+      $conn->query($sql);
+      $_SESSION['user'] = [
+        'studentID'=>$StudentID,
+      'studentName'=>$StudentName
+    ];
+      header('location:index.php');
+      exit;
+      }
+    catch(mysqli_sql_exception) {
+      $err = "StudentID $StudentID ซ้ำฮะ.";
+    }
+    catch(Exception){
+      $err = $e;
+    }
   }     
 ?>
 
@@ -58,7 +73,11 @@
 
         <img class="mb-4" src="image\activity-logo-913-6531.png" alt="" width="300" height="250">
         <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
-    
+<?php
+if(isset($err)){
+  echo "<div class='alert alert-danger'>$err</div>";
+}
+?>
         <!-- Student ID -->
         <div class="form-floating mb-3">
           <input required name="StudentID" type="text" class="form-control" id="stuID" placeholder="">
